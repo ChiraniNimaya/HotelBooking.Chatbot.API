@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HotelBooking.ChatBot.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f0a685e6044c73111b977637ccb0a0ab7e6a94b1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3a3fe40dd69e1883b300053e79bf3500c3e22eee")]
 [assembly: System.Reflection.AssemblyProductAttribute("HotelBooking.ChatBot.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HotelBooking.ChatBot.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
