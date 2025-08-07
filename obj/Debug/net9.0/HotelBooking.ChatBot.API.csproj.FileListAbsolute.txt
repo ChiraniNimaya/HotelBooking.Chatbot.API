@@ -37,3 +37,4 @@ C:\Users\chira\source\repos\HotelBooking.ChatBot.API\bin\Debug\net9.0\Microsoft.
 C:\Users\chira\source\repos\HotelBooking.ChatBot.API\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
 C:\Users\chira\source\repos\HotelBooking.ChatBot.API\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
 C:\Users\chira\source\repos\HotelBooking.ChatBot.API\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\chira\source\repos\HotelBooking.ChatBot.API\obj\Debug\net9.0\HotelBooking.ChatBot.API.sourcelink.json

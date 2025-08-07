@@ -26,7 +26,8 @@ namespace HotelBooking.ChatBot.API.Services
             input = Regex.Replace(input, @"\s+", " ");
 
             // === ROOM TYPE DETECTION WITH SYNONYMS ===
-            RoomType detectedRoomType = DetectRoomType(input);
+            RoomType roomTypeForCalculations = DetectRoomType(input) ?? RoomType.Standard;
+
 
             // === GUEST TYPE DETECTION ===
             bool isResident = DetectGuestType(input);
@@ -44,13 +45,13 @@ namespace HotelBooking.ChatBot.API.Services
             switch (intent)
             {
                 case "price":
-                    return await GeneratePriceResponseAsync(detectedRoomType, checkIn, checkOut, isResident, roomQuantity);
+                    return await GeneratePriceResponseAsync(roomTypeForCalculations, checkIn, checkOut, isResident, roomQuantity);
 
                 case "availability":
-                    return await GenerateAvailabilityResponseAsync(detectedRoomType, checkIn, checkOut, roomQuantity);
+                    return await GenerateAvailabilityResponseAsync(roomTypeForCalculations, checkIn, checkOut, roomQuantity);
 
                 case "room_info":
-                    return GenerateRoomInfoResponse(detectedRoomType); 
+                    return GenerateRoomInfoResponse(DetectRoomType(input)); 
 
                 case "booking_help":
                     return GenerateBookingHelpResponse(); 
@@ -60,7 +61,7 @@ namespace HotelBooking.ChatBot.API.Services
             }
         }
 
-        private RoomType DetectRoomType(string input)
+        private RoomType? DetectRoomType(string input)
         {
             // Room type synonyms dictionary
             var roomTypeSynonyms = new Dictionary<RoomType, string[]>
@@ -79,7 +80,7 @@ namespace HotelBooking.ChatBot.API.Services
                 }
             }
 
-            return RoomType.Standard; // default 
+            return null; // default 
         }
 
         private bool DetectGuestType(string input)
@@ -503,28 +504,40 @@ namespace HotelBooking.ChatBot.API.Services
 
         private string GenerateRoomInfoResponse(RoomType? specificType = null)
         {
+            string allRoomTypesInfo = "Our Room Types:\n\n" +
+                                      "• Standard - Basic amenities, ideal for solo/couples\n" +
+                                      "• Deluxe - Spacious and modern with premium features\n" +
+                                      "• Suite - Luxurious stay with city views and executive amenities\n" +
+                                      "• Family - Perfect for families (up to 5 guests)\n";
+
+            string specificRoomInfo = string.Empty;
+
             if (specificType.HasValue)
             {
                 switch (specificType.Value)
                 {
                     case RoomType.Standard:
-                        return "Standard Room:\n• Basic amenities\n• Ideal for solo travelers or couples\n• Air conditioning, TV, Wi-Fi\n• Single or double bed options";
+                        specificRoomInfo = "\n\nStandard Room:\n• Basic amenities\n• Ideal for solo travelers or couples\n• Air conditioning, TV, Wi-Fi\n• Single or double bed options";
+                        break;
                     case RoomType.Deluxe:
-                        return "Deluxe Room:\n• Spacious and modern\n• Premium amenities\n• City or garden view\n• Work desk and seating area";
+                        specificRoomInfo = "\n\nDeluxe Room:\n• Spacious and modern\n• Premium amenities\n• City or garden view\n• Work desk and seating area";
+                        break;
                     case RoomType.Suite:
-                        return "Suite:\n• Luxurious accommodation\n• Separate living area\n• Premium city views\n• Executive amenities and services";
+                        specificRoomInfo = "\n\nSuite:\n• Luxurious accommodation\n• Separate living area\n• Premium city views\n• Executive amenities and services";
+                        break;
                     case RoomType.Family:
-                        return "Family Room:\n• Perfect for families (up to 5 guests)\n• Multiple beds or sofa bed\n• Extra space and storage\n• Family-friendly amenities";
+                        specificRoomInfo = "\n\nFamily Room:\n• Perfect for families (up to 5 guests)\n• Multiple beds or sofa bed\n• Extra space and storage\n• Family-friendly amenities";
+                        break;
                 }
             }
+            else
+            {
+                specificRoomInfo = "\n\nAsk about specific room types for detailed information!";
+            }
 
-            return "Our Room Types:\n\n" +
-                   "• Standard - Basic amenities, ideal for solo/couples\n" +
-                   "• Deluxe - Spacious and modern with premium features\n" +
-                   "• Suite - Luxurious stay with city views and executive amenities\n" +
-                   "• Family - Perfect for families (up to 5 guests)\n\n" +
-                   "Ask about specific room types for detailed information!";
+            return allRoomTypesInfo + specificRoomInfo;
         }
+
 
         private string GenerateBookingHelpResponse()
         {
@@ -539,9 +552,9 @@ namespace HotelBooking.ChatBot.API.Services
         private string GenerateDefaultResponse()
         {
             return "I'm here to help with:\n\n" +
-                   "Room Prices - \"What's the cost of a deluxe room?\"\n" +
-                   "Availability - \"Are family rooms available this weekend?\"\n" +
-                   "Room Information - \"Tell me about your room types\"\n\n" +
+                   "Room Prices \n" +
+                   "Availability \n" +
+                   "Room Information \n" +
                    "Example: 'Is a suite available for 2 nights next week for a tourist?'";
         }
 
