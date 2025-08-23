@@ -5,6 +5,7 @@ using HotelBooking.Chatbot.API.Services.Clients;
 using HotelBooking.ChatBot.API.Utils.Constants;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Xceed.Wpf.Toolkit;
 using static HotelBooking.ChatBot.API.Enums.RoomTypes;
 
 namespace HotelBooking.ChatBot.API.Services
@@ -319,6 +320,9 @@ namespace HotelBooking.ChatBot.API.Services
             // Track how many rooms of each type are already booked
             Dictionary<RoomType, int> roomsBooked = new Dictionary<RoomType, int>();
 
+            if (existingBookings == null)
+                return true;
+
             foreach (var booking in existingBookings)
             {
                 // Skip bookings that do not overlap with the requested period
@@ -420,15 +424,18 @@ namespace HotelBooking.ChatBot.API.Services
         {
             try
             {
+                
                 bool available = await CheckRoomAvailability(roomType, checkIn, checkOut, quantity);
                 var (occupied, total, occupancyRate) = await GetOccupancyStats(roomType, checkIn, checkOut);
+                
 
                 string roomText = quantity == 1 ? "room" : "rooms";
                 int nights = (checkOut - checkIn).Days;
                 if (nights <= 0) nights = 1;
-
+                
                 if (available)
                 {
+                    
                     string availabilityLevel = "";
                     if (occupancyRate > 0.7f)
                         availabilityLevel = "Limited availability";
@@ -452,9 +459,9 @@ namespace HotelBooking.ChatBot.API.Services
                            $"Based on booking patterns, you might consider:\n{alternatives}";
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return "Unable to check availability at the moment. Please try again with a clearer query.";
+                return $"Unable to check availability at the moment. Error : {ex}" ;
             }
         }
 

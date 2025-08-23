@@ -32,6 +32,8 @@ namespace HotelBooking.Chatbot.API.Services.Clients
             try
             {
                 var result = await _httpClient.GetFromJsonAsync<ApiResponse<List<Booking>>>($"api/booking/roomType/{roomType}");
+                if (result.Status == "error")
+                    return null;
                 return result.Data;
             }
             catch (HttpRequestException)
